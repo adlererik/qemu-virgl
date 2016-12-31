@@ -1,0 +1,5 @@
+usr/share/openbios/openbios-sparc32 usr/share/qemu/openbios-sparc32
+usr/share/openbios/openbios-sparc64 usr/share/qemu/openbios-sparc64
+usr/share/openbios/QEMU,VGA.bin     usr/share/qemu/QEMU,VGA.bin
+usr/share/openbios/QEMU,cgthree.bin usr/share/qemu/QEMU,cgthree.bin
+usr/share/openbios/QEMU,tcx.bin     usr/share/qemu/QEMU,tcx.bin

@@ -1,0 +1,51 @@
+From: Michael Tokarev <mjt@tls.msk.ru>
+Date: Sun, 24 Nov 2013 00:56:47 +0400
+Subject: use data path to search data files, not just a single directory
+Forwarded: no
+
+Upstream qemu builds all firmware/binary files and keeps them
+in one data directory.  Debian uses different packages with
+those data files.  In the past, we used to create symlinks from
+qemu data directory to files in other packages.
+
+Instead of using symlinks, this patch allows to specify list
+of directories to look at, at build time (runtime already
+recognizes -L option).
+
+This allows us to go without symlinks, and to make some other
+packages optional (f.e. vga roms are provided by both vgabios
+package and seabios package, either of them should work).
+
+This patch is debian-specific.
+
+--- a/vl.c
++++ b/vl.c
+@@ -125,7 +125,11 @@ int main(int argc, char **argv)
+ #define MAX_VIRTIO_CONSOLES 1
+ #define MAX_SCLP_CONSOLES 1
+ 
+-static const char *data_dir[16];
++#ifndef CONFIG_QEMU_DATAPATH
++# define CONFIG_QEMU_DATAPATH CONFIG_QEMU_DATADIR
++#endif
++static char qemu_datapath[] = CONFIG_QEMU_DATAPATH;
++static const char *data_dir[32];
+ static int data_dir_idx;
+ const char *bios_name = NULL;
+ enum vga_retrace_method vga_retrace_method = VGA_RETRACE_DUMB;
+@@ -4057,9 +4061,12 @@ int main(int argc, char **argv, char **e
+         qemu_set_log(0);
+     }
+ 
+-    /* If all else fails use the install path specified when building. */
+-    if (data_dir_idx < ARRAY_SIZE(data_dir)) {
+-        data_dir[data_dir_idx++] = CONFIG_QEMU_DATADIR;
++    /* add standard dirs to data path */
++    for(optarg = strtok(qemu_datapath, ":");
++        optarg && data_dir_idx < ARRAY_SIZE(data_dir);
++        optarg = strtok(NULL, ":"))
++    {
++        data_dir[data_dir_idx++] = optarg;
+     }
+ 
+     /* -L help lists the data directories and exits. */

@@ -1,0 +1,27 @@
+From 6cc5a54e01f1b9904e595b2f7ff4c30e2414fda9 Mon Sep 17 00:00:00 2001
+From: Michael Tokarev <mjt@tls.msk.ru>
+Date: Thu, 10 Nov 2016 17:51:32 +0300
+Subject: doc: don't mention -memory, it is -m
+Bug-Debian: https://bugs.debian.org/833619
+
+Signed-off-by: Michael Tokarev <mjt@tls.msk.ru>
+---
+ qemu-options.hx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/qemu-options.hx b/qemu-options.hx
+index c534a2f..124113b 100644
+--- a/qemu-options.hx
++++ b/qemu-options.hx
+@@ -250,7 +250,7 @@ use is discouraged as it may be removed from future versions.
+ ETEXI
+ 
+ DEF("m", HAS_ARG, QEMU_OPTION_m,
+-    "-m[emory] [size=]megs[,slots=n,maxmem=size]\n"
++    "-m [size=]megs[,slots=n,maxmem=size]\n"
+     "                configure guest RAM\n"
+     "                size: initial amount of guest memory\n"
+     "                slots: number of hotplug slots (default: none)\n"
+-- 
+2.1.4
+

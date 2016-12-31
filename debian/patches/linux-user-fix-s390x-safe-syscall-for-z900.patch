@@ -1,0 +1,36 @@
+From: Richard Henderson <rth@twiddle.net>
+To: qemu-devel@nongnu.org
+Date: Wed, 26 Oct 2016 12:08:52 -0700
+Message-Id: <1477508932-5827-1-git-send-email-rth@twiddle.net>
+Subject: [Qemu-devel] [PATCH v2] linux-user: Fix s390x safe-syscall for z900
+Cc: Riku Voipio <riku.voipio@iki.fi>
+
+The LT instruction was added in the extended immediate facility
+introduced with the z9-109 processor.
+
+Cc: Riku Voipio <riku.voipio@iki.fi>
+Reported-by: Michael Tokarev <mjt@tls.msk.ru>
+Fixes: c9bc3437a905b660561a26cd4ecc64579843267b
+Suggested-by: Aurelien Jarno <aurelien@aurel32.net>
+Signed-off-by: Richard Henderson <rth@twiddle.net>
+---
+ linux-user/host/s390x/safe-syscall.inc.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/linux-user/host/s390x/safe-syscall.inc.S b/linux-user/host/s390x/safe-syscall.inc.S
+index f1b446a..414b44a 100644
+--- a/linux-user/host/s390x/safe-syscall.inc.S
++++ b/linux-user/host/s390x/safe-syscall.inc.S
+@@ -72,7 +72,7 @@ safe_syscall_base:
+ 	 */
+ safe_syscall_start:
+ 	/* if signal_pending is non-zero, don't do the call */
+-	lt	%r0,0(%r8)
++	icm	%r0,15,0(%r8)
+ 	jne	2f
+ 	svc	0
+ safe_syscall_end:
+-- 
+2.7.4
+
+
